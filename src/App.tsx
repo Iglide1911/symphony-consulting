@@ -674,46 +674,38 @@ function ContactForm() {
   const [form, setForm] = useState({
     name: '', company: '', email: '', mobile: '', challenge: '',
   })
-  const [fileName, setFileName] = useState('')
-  const [fileObj, setFileObj] = useState<File | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
-  const fileRef = useRef<HTMLInputElement>(null)
-
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0] || null
-    setFileObj(f)
-    setFileName(f ? f.name : '')
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
+    setError('')
 
     try {
       const data = new FormData()
+      data.append('access_key', '9a5db3c7-0b3f-4fbe-b704-41dc87f4a833')
+      data.append('subject', `New Enquiry from ${form.name} — Symphony Consultancy`)
+      data.append('from_name', 'Symphony Consultancy Website')
       data.append('name', form.name)
       data.append('company', form.company)
       data.append('email', form.email)
       data.append('mobile', form.mobile)
       data.append('challenge', form.challenge)
-      if (fileObj) {
-        data.append('attachment', fileObj, fileObj.name)
-      }
 
-      const res = await fetch('https://formspree.io/f/xvzedjyd', {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: data,
-        headers: { 'Accept': 'application/json' },
       })
-      if (res.ok) {
+      const json = await res.json()
+      if (json.success) {
         setSubmitted(true)
       } else {
-        setError('Something went wrong. Please email us directly at ridima@symphonyconsultancy.in')
+        setError(`Submission failed: ${json.message || 'Unknown error'}. Please email ridima@symphonyconsultancy.in directly.`)
       }
-    } catch {
-      setError('Something went wrong. Please email us directly at ridima@symphonyconsultancy.in')
+    } catch (err) {
+      setError(`Network error. Please email us directly at ridima@symphonyconsultancy.in`)
     } finally {
       setSubmitting(false)
     }
@@ -743,7 +735,7 @@ function ContactForm() {
         </div>
         <p style={{ color: '#7A7A85', fontSize: 15, fontWeight: 300 }}>
           Your application is on its way to Ridima. Expect a personal reply within 48 hours.
-          {fileName && <><br /><span style={{ color: '#9A9A9F', fontSize: 13, marginTop: 8, display: 'block' }}>Your file <strong>{fileName}</strong> was included with your submission.</span></>}
+          <br /><span style={{ color: '#9A9A9F', fontSize: 13, marginTop: 8, display: 'block' }}>If you have a pitch deck or business plan, email it to <strong style={{ color: '#D4F53C' }}>ridima@symphonyconsultancy.in</strong></span>
         </p>
       </div>
     )
@@ -786,32 +778,17 @@ function ContactForm() {
         />
       </div>
 
-      {/* File Upload */}
-      <div>
-        <label style={labelStyle}>Attach Your Pitch Deck or Business Plan (PDF / PPT)</label>
-        <div
-          onClick={() => fileRef.current?.click()}
-          style={{
-            background: '#131316', border: '1px dashed rgba(212,245,60,0.25)',
-            padding: '20px 24px', cursor: 'pointer', transition: 'border-color 0.2s',
-            display: 'flex', alignItems: 'center', gap: 14,
-          }}
-          onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(212,245,60,0.55)')}
-          onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(212,245,60,0.25)')}
-        >
-          <div style={{ width: 36, height: 36, border: '1px solid rgba(212,245,60,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="18" height="18" fill="none" stroke="#D4F53C" strokeWidth={1.5} viewBox="0 0 24 24">
-              <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <div>
-            {fileName
-              ? <span style={{ fontSize: 14, color: '#D4F53C', fontWeight: 500 }}>{fileName}</span>
-              : <><span style={{ fontSize: 14, color: '#9A9A9F' }}>Click to upload your pitch deck or business plan</span><br /><span style={{ fontSize: 11, color: '#6A6A75', letterSpacing: '0.04em' }}>PDF, PPT, PPTX — max 20MB</span></>
-            }
-          </div>
+      {/* Pitch Deck Callout */}
+      <div style={{ background: 'rgba(212,245,60,0.05)', border: '1px solid rgba(212,245,60,0.2)', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ width: 36, height: 36, border: '1px solid rgba(212,245,60,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <svg width="18" height="18" fill="none" stroke="#D4F53C" strokeWidth={1.5} viewBox="0 0 24 24">
+            <path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
-        <input ref={fileRef} type="file" accept=".pdf,.ppt,.pptx" onChange={handleFile} style={{ display: 'none' }} />
+        <div>
+          <span style={{ fontSize: 13, color: '#D4F53C', fontWeight: 600, display: 'block', marginBottom: 2 }}>Have a Pitch Deck or Business Plan?</span>
+          <span style={{ fontSize: 13, color: '#7A7A85', fontWeight: 300 }}>Email it directly to <strong style={{ color: '#F0EDE8', fontWeight: 500 }}>ridima@symphonyconsultancy.in</strong></span>
+        </div>
       </div>
 
       {error && (
