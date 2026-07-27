@@ -675,13 +675,15 @@ function ContactForm() {
     name: '', company: '', email: '', mobile: '', challenge: '',
   })
   const [fileName, setFileName] = useState('')
+  const [fileObj, setFileObj] = useState<File | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0]
+    const f = e.target.files?.[0] || null
+    setFileObj(f)
     setFileName(f ? f.name : '')
   }
 
@@ -690,20 +692,20 @@ function ContactForm() {
     setSubmitting(true)
 
     try {
+      const data = new FormData()
+      data.append('name', form.name)
+      data.append('company', form.company)
+      data.append('email', form.email)
+      data.append('mobile', form.mobile)
+      data.append('challenge', form.challenge)
+      if (fileObj) {
+        data.append('attachment', fileObj, fileObj.name)
+      }
+
       const res = await fetch('https://formspree.io/f/xvzedjyd', {
         method: 'POST',
-        body: JSON.stringify({
-          name: form.name,
-          company: form.company,
-          email: form.email,
-          mobile: form.mobile,
-          challenge: form.challenge,
-          attachment_filename: fileName || 'No file attached',
-        }),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
+        body: data,
+        headers: { 'Accept': 'application/json' },
       })
       if (res.ok) {
         setSubmitted(true)
@@ -741,7 +743,7 @@ function ContactForm() {
         </div>
         <p style={{ color: '#7A7A85', fontSize: 15, fontWeight: 300 }}>
           Your application is on its way to Ridima. Expect a personal reply within 48 hours.
-          {fileName && <><br /><span style={{ color: '#9A9A9F', fontSize: 13, marginTop: 8, display: 'block' }}>Don't forget to attach <strong>{fileName}</strong> to the email that just opened.</span></>}
+          {fileName && <><br /><span style={{ color: '#9A9A9F', fontSize: 13, marginTop: 8, display: 'block' }}>Your file <strong>{fileName}</strong> was included with your submission.</span></>}
         </p>
       </div>
     )
