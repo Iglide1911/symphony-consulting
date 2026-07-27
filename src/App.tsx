@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import symphonyLogo from '@/imports/symphony_consultancy.jpeg'
 import ridimaPic from '@/imports/Ridima_Ja.png'
 
@@ -666,6 +667,7 @@ export default function App() {
           .cta-tagline { font-size: 15px; }
         }
       `}</style>
+      <Analytics />
     </div>
   )
 }
