@@ -250,7 +250,6 @@ export default function App() {
         </div>
 
         <div style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: 0.35, zIndex: 1 }}>
-          <span style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Scroll</span>
           <div style={{ width: 1, height: 40, background: 'linear-gradient(to bottom, #F0EDE8, transparent)' }} />
         </div>
       </section>
@@ -779,16 +778,9 @@ function ContactForm() {
       </div>
 
       {/* Pitch Deck Callout */}
-      <div style={{ background: 'rgba(212,245,60,0.05)', border: '1px solid rgba(212,245,60,0.2)', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div style={{ width: 36, height: 36, border: '1px solid rgba(212,245,60,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <svg width="18" height="18" fill="none" stroke="#D4F53C" strokeWidth={1.5} viewBox="0 0 24 24">
-            <path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-        <div>
-          <span style={{ fontSize: 13, color: '#D4F53C', fontWeight: 600, display: 'block', marginBottom: 2 }}>Have a Pitch Deck or Business Plan?</span>
-          <span style={{ fontSize: 13, color: '#7A7A85', fontWeight: 300 }}>Email it directly to <strong style={{ color: '#F0EDE8', fontWeight: 500 }}>ridima@symphonyconsultancy.in</strong></span>
-        </div>
+      <div style={{ background: 'rgba(212,245,60,0.05)', border: '1px solid rgba(212,245,60,0.2)', padding: '16px 20px' }}>
+        <span style={{ fontSize: 13, color: '#D4F53C', fontWeight: 600, display: 'block', marginBottom: 2 }}>Have a Pitch Deck or Business Plan?</span>
+        <span style={{ fontSize: 13, color: '#7A7A85', fontWeight: 300 }}>Email it directly to <strong style={{ color: '#F0EDE8', fontWeight: 500 }}>ridima@symphonyconsultancy.in</strong></span>
       </div>
 
       {error && (
